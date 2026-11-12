@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>env-checker — Rust DevSecOps Secret Gate &amp; API Control Plane | kishor.tech</title>
+  <meta name="description" content="Blazing-fast Rust pre-commit and CI/CD secret quality gate (Nexus/SonarQube style) with API-key auth, .env auto-purge, and SARIF reporting.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Source+Serif+4:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d13;
+      --box: #101622;
+      --card: #161f2e;
+      --text: #e6e8ee;
+      --muted: #93a1b8;
+      --accent: #f43f5e;
+      --link: #38bdf8;
+      --green: #10b981;
+      --border: rgba(56, 189, 248, 0.22);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image: radial-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+      background-size: 16px 16px;
+      color: var(--text);
+      font-family: "Source Serif 4", Georgia, serif;
+      line-height: 1.6;
+    }
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(16, 22, 34, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .brand { font-family: "VT323", monospace; font-size: 1.7rem; letter-spacing: 0.05em; color: #fff; text-decoration: none; }
+    .brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1rem; flex-wrap: wrap; font-family: "JetBrains Mono", monospace; font-size: 0.78rem; }
+    .nav-links a { color: var(--link); text-decoration: none; }
+    .nav-links a:hover { color: var(--accent); }
+    .wrap { max-width: 1020px; margin: 2rem auto; padding: 0 1rem; }
+    .panel {
+      background: var(--box); border: 1px solid var(--border); border-radius: 4px;
+      padding: 1.5rem 1.75rem; margin-bottom: 1.5rem;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    }
+    h1, h2, h3 { font-family: "VT323", monospace; letter-spacing: 0.04em; margin-top: 0; color: #f8fafc; }
+    h1 { font-size: 2.5rem; line-height: 1.1; margin-bottom: 0.4rem; }
+    h2 { font-size: 1.75rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+    .badge {
+      display: inline-block; font-family: "JetBrains Mono", monospace; font-size: 0.72rem;
+      padding: 0.2rem 0.55rem; border-radius: 3px; border: 1px solid var(--border);
+      background: var(--card); color: var(--link); margin-right: 0.4rem; margin-bottom: 0.4rem;
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1rem; }
+    label { display: block; font-family: "JetBrains Mono", monospace; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.3rem; }
+    input, select, textarea {
+      width: 100%; background: #0c121d; color: var(--text); border: 1px solid var(--border);
+      border-radius: 3px; padding: 0.6rem 0.75rem; font-family: "JetBrains Mono", monospace; font-size: 0.82rem;
+    }
+    button {
+      background: var(--accent); color: #fff; border: 1px solid var(--accent);
+      border-radius: 3px; padding: 0.55rem 1.1rem; font-family: "JetBrains Mono", monospace;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer; text-transform: uppercase;
+    }
+    button:hover { background: #fb7185; }
+    button.secondary { background: transparent; color: var(--link); border-color: var(--border); }
+    pre {
+      background: #0c121d; border: 1px solid var(--border); border-radius: 3px;
+      padding: 0.85rem; overflow-x: auto; font-family: "JetBrains Mono", monospace; font-size: 0.78rem; color: var(--link);
+    }
+    .status-pass { color: var(--green); font-weight: 700; font-family: "JetBrains Mono", monospace; }
+    .status-block { color: var(--accent); font-weight: 700; font-family: "JetBrains Mono", monospace; }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="/">env-checker<span>.kishor.tech</span></a>
+    <nav class="nav-links">
+      <a href="#keygen">API Keys</a>
+      <a href="#playground">Live Scanner</a>
+      <a href="#cicd">CI/CD Gate</a>
+      <a href="https://kishor.tech" target="_blank" rel="noopener">← kishor.tech</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="panel">
+      <div>
+        <span class="badge">RUST + RAYON SIMD</span>
+        <span class="badge">NPM: @kishorkumarparoi/env-checker</span>
+        <span class="badge">NEXUS / SONARQUBE QUALITY GATE</span>
+        <span class="badge">AUTO-PURGE &amp; SARIF 2.1.0</span>
+      </div>
+      <h1>Zero-Tension Secret &amp; .env Security Gate</h1>
+      <p>
+        Built in <strong>Rust</strong> for sub-10ms pre-commit and DevOps CI/CD scanning across <code>dev</code>, <code>test</code>, <code>stage</code>, and <code>prod</code>.
+        Automatically blocks, unstages, redacts, and purges leaked <code>.env</code> files and API keys before they ever reach GitHub or production.
+      </p>
+    </section>
+
+    <section class="panel" id="keygen">
+      <h2>1. Generate Production API Key</h2>
+      <div class="grid-2">
+        <div>
+          <label for="projInput">PROJECT / REPOSITORY NAME</label>
+          <input id="projInput" value="ai-engineering-from-scratch" placeholder="my-microservice">
+        </div>
+        <div>
+          <label for="envSelect">ENVIRONMENT SCOPE</label>
+          <select id="envSelect">
+            <option value="all">all (dev + test + stage + prod)</option>
+            <option value="prod">prod only</option>
+            <option value="stage">stage only</option>
+            <option value="test">test only</option>
+            <option value="dev">dev only</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap;">
+        <button id="genKeyBtn" type="button">Issue HMAC API Key</button>
+        <button id="copyKeyBtn" type="button" class="secondary">Copy Key</button>
+      </div>
+      <pre id="keyOutput" style="margin-top: 1rem;">Click "Issue HMAC API Key" to provision a live ec_live_... token.</pre>
+    </section>
+
+    <section class="panel" id="playground">
+      <h2>2. Live Secret Scanner &amp; Auto-Redactor</h2>
+      <label for="scanInput">PASTE .ENV OR SOURCE SNIPPET TO TEST</label>
+      <textarea id="scanInput" rows="5">OPENAI_API_KEY=sk-proj-99998888777766665555444433332222
+DATABASE_URL=postgres://admin:SuperSecretPass99@db.prod.internal:5432/app
+PUBLIC_URL=https://kishor.tech</textarea>
+      <div style="margin-top: 0.85rem;">
+        <button id="scanBtn" type="button">Run Quality Gate Scan</button>
+      </div>
+      <pre id="scanOutput" style="margin-top: 1rem;">Waiting for scan...</pre>
+    </section>
+
+    <section class="panel" id="cicd">
+      <h2>3. Quick Integration (npm, Pre-Commit, GitHub Actions)</h2>
+      <div class="grid-2">
+        <div>
+          <h3>NPM / Local Pre-Commit</h3>
+          <pre>npm i -g @kishorkumarparoi/env-checker
+env-checker init-hooks
+env-checker scan --staged --auto-purge</pre>
+        </div>
+        <div>
+          <h3>CI/CD Gate (Nexus / SonarQube Mode)</h3>
+          <pre>npx @kishorkumarparoi/env-checker ci \
+  --env prod \
+  --api-key "$ENV_CHECKER_API_KEY" \
+  --auto-purge</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let latestKey = '';
+    document.getElementById('genKeyBtn').addEventListener('click', async () => {
+      const project = document.getElementById('projInput').value.trim();
+      const environment = document.getElementById('envSelect').value;
+      const out = document.getElementById('keyOutput');
+      out.textContent = 'Provisioning key...';
+      try {
+        const res = await fetch('/api/v1/keys', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ project, environment })
+        });
+        const data = await res.json();
+        latestKey = data.api_key || '';
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+    });
+
+    document.getElementById('copyKeyBtn').addEventListener('click', () => {
+      if (latestKey) navigator.clipboard.writeText(latestKey);
+    });
+
+    document.getElementById('scanBtn').addEventListener('click', async () => {
+      const content = document.getElementById('scanInput').value;
+      const out = document.getElementById('scanOutput');
+      out.textContent = 'Scanning...';
+      try {
+        const res = await fetch('/api/v1/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content, filename: '.env.production' })
+        });
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/env-checker-core",
+    "crates/env-checker-cli",
+]
+
+[workspace.package]
+version = "1.0.0"
+edition = "2021"
+license = "MIT"
+authors = ["Kishor Kumar Paroi <kishor.ruet.cse@gmail.com>"]
+repository = "https://github.com/KishorKumarParoi/env-checker"
+homepage = "https://env.kishor.tech"

@@ -1,0 +1,23 @@
+name: env-checker Security Quality Gate
+
+on:
+  push:
+    branches: [main, master, develop, stage]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  env-checker-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run env-checker CI/CD Gate (Nexus/SonarQube mode)
+        env:
+          ENV_CHECKER_API_KEY: ${{ secrets.ENV_CHECKER_API_KEY }}
+          ENV_CHECKER_ENDPOINT: https://env.kishor.tech
+        run: |
+          npx --yes @kishorkumarparoi/env-checker ci \
+            --env "${{ github.ref_name == 'main' && 'prod' || 'stage' }}" \
+            --auto-purge

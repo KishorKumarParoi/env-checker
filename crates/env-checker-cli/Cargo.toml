@@ -1,0 +1,17 @@
+[package]
+name = "env-checker"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Enterprise Rust pre-commit & CI/CD secret gate (Nexus/SonarQube style) with API-key auth and auto-purge"
+
+[[bin]]
+name = "env-checker"
+path = "src/main.rs"
+
+[dependencies]
+env-checker-core = { path = "../env-checker-core" }
+clap = { version = "4.5", features = ["derive", "env"] }
+colored = "2.1"
+serde_json = "1.0"
+ureq = { version = "2.10", features = ["json"] }

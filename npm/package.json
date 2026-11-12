@@ -1,0 +1,37 @@
+{
+  "name": "@kishorkumarparoi/env-checker",
+  "version": "1.0.0",
+  "description": "Blazing-fast Rust pre-commit & DevOps CI/CD secret gate (Nexus/SonarQube style) with API-key auth, .env auto-purge, and SARIF reporting.",
+  "bin": {
+    "env-checker": "./bin/env-checker.js"
+  },
+  "scripts": {
+    "test": "node ./bin/env-checker.js --help"
+  },
+  "keywords": [
+    "env-checker",
+    "secret-scanner",
+    "rust",
+    "devsecops",
+    "pre-commit",
+    "ci-cd",
+    "sonarqube",
+    "nexus",
+    "dotenv",
+    "security"
+  ],
+  "author": "Kishor Kumar Paroi <kishor.ruet.cse@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://env.kishor.tech",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KishorKumarParoi/env-checker.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "README.md"
+  ]
+}
